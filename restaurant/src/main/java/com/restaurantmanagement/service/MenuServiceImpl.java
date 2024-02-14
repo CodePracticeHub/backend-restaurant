@@ -35,7 +35,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenuById(Long id) {
-        menuRepository.deleteById(id);
+        menuRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu is not found with id: " + id));
     }
 
 

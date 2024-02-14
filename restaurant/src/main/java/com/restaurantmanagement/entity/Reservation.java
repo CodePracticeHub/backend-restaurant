@@ -11,6 +11,11 @@
 package com.restaurantmanagement.entity;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import java.io.Serial;
+import java.io.Serializable;
+>>>>>>> main
 =======
 import java.io.Serial;
 import java.io.Serializable;
@@ -31,12 +36,18 @@ import lombok.Data;
 @Entity
 @Table(name="reservations")
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class Reservation {
 =======
+=======
+>>>>>>> main
 public class Reservation implements Serializable{
 	
 	@Serial
 	private static final long serialVersionUID = 1L;
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> main
 	
 	@Id 
@@ -69,10 +80,13 @@ public class Reservation implements Serializable{
 	private String specialRequest;
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer; 
     
+=======
+>>>>>>> main
 =======
 >>>>>>> main
     public enum ReservationStatus {
@@ -83,6 +97,10 @@ public class Reservation implements Serializable{
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> reservation
+>>>>>>> main
 =======
 >>>>>>> reservation
 >>>>>>> main

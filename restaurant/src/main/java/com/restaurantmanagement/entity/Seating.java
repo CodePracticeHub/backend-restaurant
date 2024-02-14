@@ -1,5 +1,5 @@
-package com.restaurantmanagement.entity;
-
-
-public class Seating {
-}
+//package com.restaurantmanagement.entity;
+//
+//
+//public class Seating {
+//}

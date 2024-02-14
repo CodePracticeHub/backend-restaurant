@@ -35,7 +35,7 @@ public class MenuController {
 
     @GetMapping
     public Page<Menu> getAllMenus(Pageable pageable) {
-            logger.info("Request all menus pageable");
+            logger.info("Request all menus");
         int number = 1;
         calculateFactorial(number);
 
@@ -49,8 +49,8 @@ public class MenuController {
     }
 
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @DeleteMapping
-    public void deleteMenuById(@RequestParam Long id){
+    @DeleteMapping("/{id}")
+    public void deleteMenuById(@PathVariable Long id){
         logger.info("Request delete with id: " + id);
         menuService.deleteMenuById(id);
     }

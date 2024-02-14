@@ -1,5 +1,20 @@
+<<<<<<< HEAD
+//package com.restaurantmanagement.entity;
+//
+//
+//public class Reservation {
+//
+//
+//    // Other fields, getters, setters, and methods
+//}
+=======
 package com.restaurantmanagement.entity;
 
+<<<<<<< HEAD
+=======
+import java.io.Serial;
+import java.io.Serializable;
+>>>>>>> main
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -15,7 +30,14 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="reservations")
+<<<<<<< HEAD
 public class Reservation {
+=======
+public class Reservation implements Serializable{
+	
+	@Serial
+	private static final long serialVersionUID = 1L;
+>>>>>>> main
 	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +68,13 @@ public class Reservation {
 	@Column(name="special_request")
 	private String specialRequest;
 	
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer; 
     
+=======
+>>>>>>> main
     public enum ReservationStatus {
     	PENDING, CONFIRMED, CANCELED
     }
@@ -57,3 +82,7 @@ public class Reservation {
 }
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> reservation
+>>>>>>> main

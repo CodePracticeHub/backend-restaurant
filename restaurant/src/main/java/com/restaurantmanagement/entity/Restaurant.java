@@ -1,8 +1,8 @@
-package com.restaurantmanagement.entity;
-
-
-public class Restaurant {
-
-
-    // Other fields, getters, setters, and methods
-}
+//package com.restaurantmanagement.entity;
+//
+//
+//public class Restaurant {
+//
+//
+//    // Other fields, getters, setters, and methods
+//}

@@ -8,11 +8,11 @@
         <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.restaurantmanagement</groupId>
-    <artifactId>restaurant</artifactId>
+    <groupId>com.resttest</groupId>
+    <artifactId>restaurant-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>restaurant</name>
-    <description>restaurant</description>
+    <name>restaurant-test</name>
+    <description>restaurant-test</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
 
         <dependency>
@@ -61,3 +61,4 @@
     </build>
 
 </project>
+

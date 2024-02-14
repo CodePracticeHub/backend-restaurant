@@ -1,4 +1,12 @@
-# Welcome to backend-restaurant-project
+### Welcome to backend-restaurant-project
+# IMPORTANT
+## BEFORE START WORKING, DO THE FOLLOWING STEPS. 
+- ``` git checkout main ```
+- ```git pull origin main```
+- ```git checkout <branch_name>```
+- ```git merge main```
+### That will ensure all branches are up to date with the main branch
+
 ## Please work on a branch already created for you based on your entity
 * If the entity you are working on is not created, please create it. 
 

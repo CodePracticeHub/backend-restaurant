@@ -14,6 +14,9 @@
 ## How to update your brand to main branch
 ## To bring the changes from the main branch into your menu branch, you should use git merge.
 ### The easy way 
+* ```git checkout main```
+* ```git pull origin main```
+* ```git checkout your_branch```
 * ```git pull origin your_branch```
 
 ### The harder way

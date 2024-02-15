@@ -1,15 +1,4 @@
-<<<<<<< Updated upstream
-//package com.restaurantmanagement.service;
-//
-//import com.restaurantmanagement.entity.Reservation;
-//
-//import java.util.List;
-//
-//public interface ReservationService {
-//
-//
-//}
-=======
+
 package com.restaurantmanagement.service;
 
 import java.util.List;
@@ -24,9 +13,9 @@ public interface ReservationService {
 	
 	Reservation getReservationById(Long id);
 	
-	String deleteReservationBy(Long id); 
+	void deleteReservationBy(Long id); 
 	
 	Reservation updateReservation(Reservation reservation);
 	
 }
->>>>>>> Stashed changes
+

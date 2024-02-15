@@ -1,54 +1,23 @@
-<<<<<<< HEAD
-//package com.restaurantmanagement.entity;
-//
-//
-//public class Reservation {
-//
-//
-//    // Other fields, getters, setters, and methods
-//}
-=======
+
 package com.restaurantmanagement.entity;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import java.io.Serial;
 import java.io.Serializable;
->>>>>>> main
-=======
-import java.io.Serial;
-import java.io.Serializable;
->>>>>>> main
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name="reservations")
-<<<<<<< HEAD
-<<<<<<< HEAD
-public class Reservation {
-=======
-=======
->>>>>>> main
-public class Reservation implements Serializable{
+public class Reservation implements Serializable {
 	
 	@Serial
 	private static final long serialVersionUID = 1L;
-<<<<<<< HEAD
->>>>>>> main
-=======
->>>>>>> main
 	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,28 +48,9 @@ public class Reservation implements Serializable{
 	@Column(name="special_request")
 	private String specialRequest;
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer; 
-    
-=======
->>>>>>> main
-=======
->>>>>>> main
     public enum ReservationStatus {
     	PENDING, CONFIRMED, CANCELED
     }
     
 }
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> reservation
->>>>>>> main
-=======
->>>>>>> reservation
->>>>>>> main

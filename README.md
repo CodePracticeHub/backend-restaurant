@@ -25,10 +25,7 @@
 * ```git merge origin/main```
 * ```git add .```
 * ```git commit -m "Merge changes from main into your_branch"```
-* ```git push origin menu```
-
-
-
+* ```git push origin your_branch```
 
 
 ### Steps to Create a Pull Request for the 'workingBranch' Branch:

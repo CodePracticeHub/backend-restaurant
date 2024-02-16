@@ -27,6 +27,9 @@
 * ```git checkout your_branch```
 * ```git pull origin your_branch```
 
+### In your branch, you can also use
+* ```git merge main```
+
 ### The harder way
 * ```git checkout your_branch```
 * ```git fetch origin main```

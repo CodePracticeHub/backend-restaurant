@@ -27,8 +27,8 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public Reservation addReservation(Reservation reservation) {
-		return repo.save(reservation);
+	public Reservation addReservation(Reservation newReservation) {
+		return repo.save(newReservation);
 	}
 
 	@Override
@@ -51,8 +51,23 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public Reservation updateReservation(Reservation reservation) {
-		return repo.save(reservation);
+	public Reservation updateReservation(Reservation updatedReservation) {
+		
+		Long reservationId = updatedReservation.getReservationId();
+		
+		Reservation existingReservation = repo.findById(reservationId)
+				.orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " +reservationId+ " not found."));
+		
+		existingReservation.setCustomerName(updatedReservation.getCustomerName());
+		existingReservation.setCustomerEmail(updatedReservation.getCustomerEmail());
+		existingReservation.setCustomerPhone(updatedReservation.getCustomerPhone());
+		existingReservation.setReservationDateTime(updatedReservation.getReservationDateTime());
+		existingReservation.setNumberOfPeople(updatedReservation.getNumberOfPeople());
+		existingReservation.setTableNumber(updatedReservation.getTableNumber());
+		existingReservation.setStatus(updatedReservation.getStatus());
+		existingReservation.setSpecialRequest(updatedReservation.getSpecialRequest());
+		
+		return repo.save(existingReservation);
 	}
 
 }

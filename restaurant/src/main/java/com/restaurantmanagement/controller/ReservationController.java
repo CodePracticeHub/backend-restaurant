@@ -58,8 +58,12 @@ public class ReservationController {
 	}
     
 	@PutMapping("/{id}")
-	public Reservation updateReservationById(@PathVariable Long id, @RequestBody Reservation reservation) {
+	public Reservation updateReservationById(@PathVariable Long id, @RequestBody Reservation updatedReservation) {
 		logger.info("Request for Reservation update");
-		return reservationService.updateReservation(reservation);
+		
+		if(!id.equals(updatedReservation.getReservationId())) {
+			throw new IllegalArgumentException("Path variable ID and request body ID do not match");
+		}
+		return reservationService.updateReservation(updatedReservation);
 	}
 }

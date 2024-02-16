@@ -13,8 +13,13 @@ import com.restaurantmanagement.repos.ReservationRepository;
 @Service
 public class ReservationServiceImpl implements ReservationService {
     
+	
+	private final ReservationRepository repo;
+	
 	@Autowired
-	private ReservationRepository repo;
+	public ReservationServiceImpl(ReservationRepository repo) {
+		this.repo = repo;
+	}
 	
 	@Override
 	public List<Reservation> getAllReservation() {

@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class MenuServiceImpl implements MenuService {
 
@@ -50,5 +53,17 @@ public class MenuServiceImpl implements MenuService {
         existingMenu.setImageURL(menu.getImageURL() != null ? menu.getImageURL() : existingMenu.getImageURL());
         existingMenu.setDate(menu.getDate() != null ? menu.getDate() : existingMenu.getDate());
         return menuRepository.save(existingMenu);
+    }
+
+    @Override
+    public List<Menu> readByDate(Date startDate, Date endDate, Pageable page) {
+        if(startDate == null){
+            startDate = new Date(0);
+        }
+
+        if (endDate == null){
+            endDate = new Date(System.currentTimeMillis());
+        }
+        return menuRepository.findByDateBetween(startDate, endDate, page).toList();
     }
 }

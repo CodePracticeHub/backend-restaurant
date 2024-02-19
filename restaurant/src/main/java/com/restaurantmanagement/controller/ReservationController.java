@@ -23,8 +23,13 @@ import com.restaurantmanagement.service.ReservationServiceImpl;
 @RequestMapping("api/v1/reservations")
 public class ReservationController {
 	
+	
+	private final ReservationServiceImpl reservationService;
+	
 	@Autowired
-	private ReservationServiceImpl reservationService;
+	public ReservationController(ReservationServiceImpl reservationService) {
+		this.reservationService = reservationService;
+	}
 	
 	private final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 	

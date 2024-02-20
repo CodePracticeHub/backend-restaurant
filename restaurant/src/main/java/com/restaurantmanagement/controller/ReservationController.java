@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restaurantmanagement.entity.Reservation;
+import com.restaurantmanagement.entity.Reservation.ReservationStatus;
 import com.restaurantmanagement.service.ReservationServiceImpl;
 
 @RestController
@@ -42,6 +43,7 @@ public class ReservationController {
 	@PostMapping()
 	public Reservation addReservation(@RequestBody Reservation reservation) {
 		logger.info("Request for adding reservation");
+		reservation.setStatus(ReservationStatus.PENDING);
 	    return reservationService.addReservation(reservation);
 	}
 	
@@ -58,8 +60,11 @@ public class ReservationController {
 	}
     
 	@PutMapping("/{id}")
-	public Reservation updateReservationById(@PathVariable Long id, @RequestBody Reservation reservation) {
+	public Reservation updateReservationById(@PathVariable Long id, @RequestBody Reservation updatedReservation) {
 		logger.info("Request for Reservation update");
-		return reservationService.updateReservation(reservation);
+		if(!id.equals(updatedReservation.getReservationId())) {
+			throw new IllegalArgumentException("Path variable ID and request body ID do not match");
+		}
+		return reservationService.updateReservation(updatedReservation);
 	}
 }

@@ -1,20 +1,62 @@
 package com.restaurantmanagement.service;
 
-import com.restaurantmanagement.entity.User;
-import com.restaurantmanagement.entity.UserModel;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
 
-public interface UserService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.restaurantmanagement.security.model.User;
+import com.restaurantmanagement.security.repository.UserRepository;
+@Service
+public class UserService implements IUser {
+	private final UserRepository userRepository;
 
-    Page<User> getAllUsers(Pageable page);
-    User createUser(UserModel user);
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    User readUser(Long id);
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 
-    User updateUser(User user, Long id);
+    @Override
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
+    }
 
-    void deleteUser(Long id);
+    @Override
+    public User getUserByUserId(long userId) {
+    	
+        return userRepository.findById(userId);
+    }
 
+    @Override
+    public User getUserByUserName(String userName) {
+        return userRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public User updateUser(long userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId);
+        if (existingUser != null) {
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            
+            userRepository.save(existingUser);
+        }
+        else {
+        	throw new UserNotFoundException("User with ID " + userId + " not found");
+        }
+        return existingUser;
+    }
+    public class UserNotFoundException extends RuntimeException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
 }
+

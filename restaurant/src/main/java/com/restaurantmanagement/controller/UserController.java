@@ -1,16 +1,21 @@
 package com.restaurantmanagement.controller;
 
-import com.restaurantmanagement.entity.User;
-import com.restaurantmanagement.entity.UserModel;
-import com.restaurantmanagement.service.UserService;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import com.restaurantmanagement.security.model.User;
+import com.restaurantmanagement.service.UserService;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -34,27 +39,36 @@ public class UserController {
             return number * calculateFactorial(number - 1);
         }
     }
-
-    @GetMapping
-    public List<User> getAllUsers(Pageable pageable) {
-        logger.info("Request all menus");
-        int number = 1;
-        calculateFactorial(number);
-
-        return userService.getAllUsers(pageable).toList();
+    
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllUsers() {
+        List<User> users = userService.getUsers();
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> readUser(@PathVariable Long id){
-        logger.info("Request to get user information with id: " + id);
-        return new ResponseEntity<>(userService.readUser(id), HttpStatus.OK);
+
+  
+    
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable long userId) {
+        try {
+            User user = userService.getUserByUserId(userId);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while fetching the user with ID: " + userId);
+        }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody UserModel user, @PathVariable Long id){
-        User newUser = new User();
-        BeanUtils.copyProperties(user, newUser);
-        return new ResponseEntity<>(userService.updateUser(newUser, id), HttpStatus.OK);
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable long userId, @Valid @RequestBody User updatedUser) {
+        User user = userService.updateUser(userId, updatedUser);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")

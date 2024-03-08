@@ -10,6 +10,7 @@ import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.repos.SeatingRepository;
 import com.restaurantmanagement.service.ISeatingService;
 
+
 @Service
 public class SeatingServiceImpl implements ISeatingService{
 	

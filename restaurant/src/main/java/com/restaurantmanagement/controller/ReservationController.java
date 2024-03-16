@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.restaurantmanagement.entity.Reservation;
 import com.restaurantmanagement.entity.Reservation.ReservationStatus;
-import com.restaurantmanagement.service.ReservationServiceImpl;
+import com.restaurantmanagement.service.impl.ReservationServiceImpl;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")

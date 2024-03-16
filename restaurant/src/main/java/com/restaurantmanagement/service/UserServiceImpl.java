@@ -17,7 +17,7 @@
 //
 //@Service
 //@AllArgsConstructor
-//public class UserServiceImpl implements UserService {
+//public class UserServiceImpl implements UserServiceImpl {
 //
 //    private UserRepository userRepository;
 //    private PasswordEncoder bcryptEncoder;

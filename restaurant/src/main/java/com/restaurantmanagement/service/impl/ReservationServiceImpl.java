@@ -1,8 +1,9 @@
-package com.restaurantmanagement.service;
+package com.restaurantmanagement.service.impl;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.restaurantmanagement.service.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.repos.ReservationRepository;
 
 @Service
-public class ReservationServiceImpl implements ReservationService {
+public class ReservationServiceImpl implements IReservationService {
     
 	
 	private final ReservationRepository repo;

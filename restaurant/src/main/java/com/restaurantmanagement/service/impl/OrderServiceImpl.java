@@ -1,27 +1,26 @@
-package com.restaurantmanagement.service;
+package com.restaurantmanagement.service.impl;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.restaurantmanagement.service.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.restaurantmanagement.controller.OrderController;
 import com.restaurantmanagement.entity.CustomerOrder;
-import com.restaurantmanagement.entity.Reservation;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.repos.OrderRepository;
 
 @Service
-public class OrderService implements IOrderService {
+public class OrderServiceImpl implements IOrderService {
 
 	
 	@Autowired
 	private OrderRepository repo;
 	
-	private final Logger logger = LoggerFactory.getLogger(OrderService.class);
+	private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
 	@Override
 	public List<CustomerOrder> getAllOrders() {

@@ -3,7 +3,7 @@ package com.restaurantmanagement.controller;
 //
 //import com.restaurantmanagement.entity.User;
 //import com.restaurantmanagement.entity.UserModel;
-//import com.restaurantmanagement.service.UserService;
+//import com.restaurantmanagement.service.impl.UserServiceImpl;
 //import jakarta.validation.Valid;
 //import lombok.AllArgsConstructor;
 //import org.slf4j.Logger;
@@ -22,7 +22,7 @@ package com.restaurantmanagement.controller;
 //    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 //
 //    @Autowired
-//    private UserService userService;
+//    private UserServiceImpl userService;
 //
 //    @PostMapping("/register")
 //    public ResponseEntity<User> save(@Valid @RequestBody UserModel user){

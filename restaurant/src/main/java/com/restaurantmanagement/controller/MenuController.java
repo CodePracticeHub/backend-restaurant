@@ -1,9 +1,8 @@
 package com.restaurantmanagement.controller;
 
 import com.restaurantmanagement.entity.Menu;
-import com.restaurantmanagement.service.MenuService;
+import com.restaurantmanagement.service.IMenuService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,10 @@ import java.util.List;
 @RequestMapping("/api/v1/menus")
 public class MenuController {
 
-    private final MenuService menuService;
+    private final IMenuService menuService;
 
     @Autowired
-    public MenuController(MenuService menuService) {
+    public MenuController(IMenuService menuService) {
         this.menuService = menuService;
     }
     private final Logger logger = LoggerFactory.getLogger(MenuController.class);

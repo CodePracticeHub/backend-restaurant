@@ -1,8 +1,9 @@
-package com.restaurantmanagement.service;
+package com.restaurantmanagement.service.impl;
 
 import com.restaurantmanagement.entity.Menu;
 import com.restaurantmanagement.repos.MenuRepository;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
+import com.restaurantmanagement.service.IMenuService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MenuServiceImpl implements MenuService {
+public class MenuServiceImpl implements IMenuService {
 
     private final MenuRepository menuRepository;
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.restaurantmanagement.entity.Reservation;
 
-public interface ReservationService {
+public interface IReservationService {
 	
 	List<Reservation> getAllReservation();
 	

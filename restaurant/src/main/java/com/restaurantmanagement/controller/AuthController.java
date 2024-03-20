@@ -191,6 +191,9 @@ public class AuthController {
 	                case "employee":
 	                    addRoleIfExists(ERole.ROLE_EMPLOYE, roles);
 	                    break;
+	                case "user":
+	                    addRoleIfExists(ERole.ROLE_USER, roles);
+	                    break;
 	               
 	                
 	                default:

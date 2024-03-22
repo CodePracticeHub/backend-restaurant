@@ -2,6 +2,7 @@ package com.restaurantmanagement.controller;
 
 
 
+import com.restaurantmanagement.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.restaurantmanagement.security.model.User;
-import com.restaurantmanagement.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -25,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 
     @Autowired
     private UserService userService;
@@ -38,6 +39,7 @@ public class UserController {
 //            return number * calculateFactorial(number - 1);
 //        }
 //    }
+
     
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

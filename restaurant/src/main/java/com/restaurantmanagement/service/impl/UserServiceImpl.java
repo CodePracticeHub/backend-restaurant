@@ -1,18 +1,19 @@
-package com.restaurantmanagement.service;
+package com.restaurantmanagement.service.impl;
 
 import java.util.List;
 
+import com.restaurantmanagement.service.IUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restaurantmanagement.security.model.User;
 import com.restaurantmanagement.security.repository.UserRepository;
 @Service
-public class UserService implements IUser {
+public class UserServiceImpl implements IUser {
 	private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

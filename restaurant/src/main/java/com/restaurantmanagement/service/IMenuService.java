@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Date;
 import java.util.List;
 
-public interface MenuService {
+public interface IMenuService {
 
     Page<Menu> getAllMenus(Pageable page);
 

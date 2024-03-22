@@ -21,24 +21,25 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private UserServiceImpl userService;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-    public int calculateFactorial(int number) {
-        if (number <= 1) {
-            return 1; // Base case: factorial of 1 is 1
-        } else {
-            return number * calculateFactorial(number - 1);
-        }
-    }
+    private UserService userService;
+
+    
+  
+//    public int calculateFactorial(int number) {
+//        if (number <= 1) {
+//            return 1; // Base case: factorial of 1 is 1
+//        } else {
+//            return number * calculateFactorial(number - 1);
+//        }
+//    }
+
     
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

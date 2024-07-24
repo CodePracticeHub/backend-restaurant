@@ -31,7 +31,7 @@ public class JwtUtils {
   //SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS384);
   private String jwtSecret;
 
-  @Value("${faiss.app.jwtExpirationMs}")
+    @Value("${faiss.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
   public String generateJwtToken(Authentication authentication) {

@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.restaurantmanagement.entity.user.UserServiceImpl;
+import com.restaurantmanagement.entity.user.UserUpdateDTO;
+import com.restaurantmanagement.security.model.User;
+import com.restaurantmanagement.security.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.restaurantmanagement.security.model.User;
-import com.restaurantmanagement.security.repository.UserRepository;
 
 public class UserServiceImplTest {
 
@@ -37,8 +37,8 @@ public class UserServiceImplTest {
         MockitoAnnotations.openMocks(this);
         user = new User();
         user.setId(1L);
-        user.setFirstName("John");
-        user.setLastName("Doe");
+        user.setFirstname("John");
+        user.setLastname("Doe");
         user.setUsername("johndoe");
         user.setEmail("johndoe@example.com");
     }
@@ -109,16 +109,16 @@ public class UserServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        User updatedUser = new User();
-        updatedUser.setFirstName("Jane");
-        updatedUser.setLastName("Smith");
+        UserUpdateDTO updatedUser = new UserUpdateDTO();
+        updatedUser.setFirstname("Jane");
+        updatedUser.setLastname("Smith");
         updatedUser.setUsername("janesmith");
         updatedUser.setEmail("janesmith@example.com");
 
         User result = userService.updateUser(1L, updatedUser);
 
-        assertEquals("Jane", result.getFirstName());
-        assertEquals("Smith", result.getLastName());
+        assertEquals("Jane", result.getFirstname());
+        assertEquals("Smith", result.getLastname());
         assertEquals("janesmith", result.getUsername());
         assertEquals("janesmith@example.com", result.getEmail());
 
@@ -130,9 +130,9 @@ public class UserServiceImplTest {
     public void testUpdateUserNotFound() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        User updatedUser = new User();
-        updatedUser.setFirstName("Jane");
-        updatedUser.setLastName("Smith");
+        UserUpdateDTO updatedUser = new UserUpdateDTO();
+        updatedUser.setFirstname("Jane");
+        updatedUser.setLastname("Smith");
         updatedUser.setUsername("janesmith");
         updatedUser.setEmail("janesmith@example.com");
 

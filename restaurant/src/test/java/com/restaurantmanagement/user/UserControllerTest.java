@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.restaurantmanagement.entity.user.IUser;
 import com.restaurantmanagement.entity.user.UserController;
+import com.restaurantmanagement.entity.user.UserUpdateDTO;
+import com.restaurantmanagement.security.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +24,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.restaurantmanagement.security.model.User;
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
@@ -41,15 +42,15 @@ public class UserControllerTest {
         MockitoAnnotations.openMocks(this);
         user1 = new User();
         user1.setId(1L);
-        user1.setFirstName("John");
-        user1.setLastName("Doe");
+        user1.setFirstname("John");
+        user1.setLastname("Doe");
         user1.setUsername("johndoe");
         user1.setEmail("johndoe@example.com");
 
         user2 = new User();
         user2.setId(2L);
-        user2.setFirstName("Jane");
-        user2.setLastName("Smith");
+        user2.setFirstname("Jane");
+        user2.setLastname("Smith");
         user2.setUsername("janesmith");
         user2.setEmail("janesmith@example.com");
     }
@@ -65,8 +66,8 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/v1/user/all"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("John"))
-                .andExpect(jsonPath("$[1].firstName").value("Jane"));
+                .andExpect(jsonPath("$[0].firstname").value("John"))
+                .andExpect(jsonPath("$[1].firstname").value("Jane"));
 
         verify(userService, times(1)).getUsers();
     }
@@ -78,7 +79,7 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/v1/user/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("John"));
+                .andExpect(jsonPath("$.firstname").value("John"));
 
         verify(userService, times(1)).getUserByUserId(1L);
     }
@@ -97,15 +98,18 @@ public class UserControllerTest {
     @Test
     @WithMockUser
     public void testUpdateUser() throws Exception {
-        when(userService.updateUser(anyLong(), any(User.class))).thenReturn(user1);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setEmail("newemail@example.com");
+
+        when(userService.updateUser(anyLong(), any(UserUpdateDTO.class))).thenReturn(user1);
 
         mockMvc.perform(put("/api/v1/user/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(user1)))
+                        .content(new ObjectMapper().writeValueAsString(userUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("John"));
+                .andExpect(jsonPath("$.firstname").value("John"));
 
-        verify(userService, times(1)).updateUser(anyLong(), any(User.class));
+        verify(userService, times(1)).updateUser(anyLong(), any(UserUpdateDTO.class));
     }
 
     @Test

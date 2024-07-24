@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.restaurantmanagement.security.model.User;
 
-
-
 @Repository
 @RepositoryRestResource(exported = false)
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,8 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
-  
-  List<User> findAll();	
-  User findById(long userId);	
-  User findByEmail(String email);
+
+  List<User> findAll();
+  Optional<User> findById(Long userId);
+  Optional<User> findByEmail(String email);
 }

@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-
 @Entity
 @Data
 @AllArgsConstructor
@@ -62,6 +61,4 @@ public class Menu implements Serializable {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Timestamp updatedAt;
-
-
 }

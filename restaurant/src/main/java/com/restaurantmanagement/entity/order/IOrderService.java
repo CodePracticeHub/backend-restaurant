@@ -14,7 +14,7 @@ public interface IOrderService {
 
 	Order updateOrder(Order order);
 
-	Order updatePaymentStatus(Long orderId, OrderPaymentStatus paymentStatus);
+	Order updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus);
 
 	Order completeOrder(Long orderId);
 }

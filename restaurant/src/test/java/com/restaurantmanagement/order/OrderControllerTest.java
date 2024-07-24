@@ -8,11 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurantmanagement.entity.order.IOrderService;
 import com.restaurantmanagement.entity.order.Order;
 import com.restaurantmanagement.entity.order.OrderController;
+import com.restaurantmanagement.entity.order.EOrderStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Optional;
 
 @WebMvcTest(OrderController.class)
 public class OrderControllerTest {
@@ -40,7 +37,7 @@ public class OrderControllerTest {
         order.setOrderID(1L);
         order.setOrderDateTime(new Date());
         order.setTotalAmount(100.0);
-        order.setStatus(Order.OrderStatus.PENDING);
+        order.setStatus(EOrderStatus.PENDING);
     }
 
     @Test
@@ -83,7 +80,7 @@ public class OrderControllerTest {
         doNothing().when(orderService).deleteOrderById(1L);
 
         mockMvc.perform(delete("/api/v1/orders/{id}", 1L))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(orderService, times(1)).deleteOrderById(1L);
     }

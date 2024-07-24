@@ -3,10 +3,10 @@ package com.restaurantmanagement.entity.order;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.restaurantmanagement.entity.menu.Menu;
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import com.restaurantmanagement.entity.menu.Menu;
 
 @Entity
 @Data
@@ -20,6 +20,7 @@ public class OrderItem implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="order_id", nullable=false)
+    @JsonBackReference
     private Order order;
 
     @ManyToOne

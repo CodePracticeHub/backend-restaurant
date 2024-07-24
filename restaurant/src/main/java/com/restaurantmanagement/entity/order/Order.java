@@ -5,12 +5,14 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import com.restaurantmanagement.security.model.User;
 
@@ -43,25 +45,26 @@ public class Order implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name="reservation_status")
-    private OrderStatus status;
+    private EOrderStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<OrderItem> orderItems;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_payment_status")
-    private OrderPaymentStatus paymentStatus;
+    private EOrderPaymentStatus paymentStatus;
 
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
-    private OrderStatus orderStatus;
+    private EOrderStatus orderStatus;
 
     @Column(name = "confirmed_at")
     private Timestamp confirmedAt;
@@ -69,7 +72,9 @@ public class Order implements Serializable {
     @Column(name = "canceled_at")
     private Timestamp canceledAt;
 
-    public enum OrderStatus {
-        PENDING, CONFIRMED, CANCELED
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "order_status_roles",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "status_id"))
+    private Set<OrderStatus> orderStatuses = new HashSet<>();
 }

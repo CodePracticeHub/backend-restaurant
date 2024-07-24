@@ -1,116 +1,127 @@
-package com.restaurantmanagement.order;
+package com.restaurantmanagement.entity.order;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import com.restaurantmanagement.entity.order.Order;
-import com.restaurantmanagement.entity.order.OrderPaymentStatus;
-import com.restaurantmanagement.entity.order.OrderRepository;
-import com.restaurantmanagement.entity.order.OrderServiceImpl;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
+import com.restaurantmanagement.security.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(SpringExtension.class)
 public class OrderServiceImplTest {
-
-    @Mock
-    private OrderRepository orderRepository;
 
     @InjectMocks
     private OrderServiceImpl orderService;
 
+    @Mock
+    private OrderRepository orderRepository;
+
     private Order order;
+    private User user;
+    private OrderItem orderItem1;
+    private OrderItem orderItem2;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        user = new User();
+        user.setId(1L);
+        user.setUsername("johndoe");
+
+        orderItem1 = new OrderItem();
+        orderItem1.setId(1L);
+        orderItem1.setQuantity(2);
+        orderItem1.setPrice(new BigDecimal("8.99"));
+
+        orderItem2 = new OrderItem();
+        orderItem2.setId(2L);
+        orderItem2.setQuantity(3);
+        orderItem2.setPrice(new BigDecimal("1.99"));
+
+        List<OrderItem> orderItems = Arrays.asList(orderItem1, orderItem2);
+
         order = new Order();
         order.setOrderID(1L);
-        order.setOrderDateTime(new Date(System.currentTimeMillis()));
-        order.setTotalAmount(100.0);
-        order.setStatus(Order.OrderStatus.PENDING);
+        order.setOrderDateTime(new Date());
+        order.setTotalAmount(28.97);
+        order.setUser(user);
+        order.setOrderItems(orderItems);
+        order.setPaymentStatus(EOrderPaymentStatus.UNPAID);
+        order.setDeliveryAddress("123 Main St, Anytown, USA");
+        order.setOrderStatus(EOrderStatus.PENDING);
     }
 
     @Test
-    void testGetAllOrders() {
+    public void testGetAllOrders() {
         when(orderRepository.findAll()).thenReturn(Arrays.asList(order));
-
         List<Order> orders = orderService.getAllOrders();
-        assertThat(orders).hasSize(1);
-        verify(orderRepository, times(1)).findAll();
+        assertNotNull(orders);
+        assertEquals(1, orders.size());
     }
 
     @Test
-    void testPlaceOrder() {
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
+    public void testPlaceOrder() {
+        when(orderRepository.save(order)).thenReturn(order);
         Order placedOrder = orderService.placeOrder(order);
-        assertThat(placedOrder).isNotNull();
-        verify(orderRepository, times(1)).save(order);
+        assertNotNull(placedOrder);
+        assertEquals(order.getOrderID(), placedOrder.getOrderID());
     }
 
     @Test
-    void testGetOrderById() {
+    public void testGetOrderById() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
         Order foundOrder = orderService.getOrderById(1L);
-        assertThat(foundOrder).isNotNull();
-        verify(orderRepository, times(1)).findById(1L);
+        assertNotNull(foundOrder);
+        assertEquals(order.getOrderID(), foundOrder.getOrderID());
     }
 
     @Test
-    void testGetOrderById_NotFound() {
+    public void testGetOrderByIdNotFound() {
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> {
-            orderService.getOrderById(1L);
-        });
-        verify(orderRepository, times(1)).findById(1L);
+        assertThrows(ResourceNotFoundException.class, () -> orderService.getOrderById(1L));
     }
 
     @Test
-    void testDeleteOrderById() {
+    public void testDeleteOrderById() {
+        doNothing().when(orderRepository).deleteById(1L);
         orderService.deleteOrderById(1L);
         verify(orderRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    void testUpdateOrder() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
+    public void testUpdateOrder() {
+        when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+        order.setOrderStatus(EOrderStatus.CONFIRMED);
         Order updatedOrder = orderService.updateOrder(order);
-        assertThat(updatedOrder).isNotNull();
-        verify(orderRepository, times(1)).save(order);
+        assertNotNull(updatedOrder);
+        assertEquals(EOrderStatus.CONFIRMED, updatedOrder.getOrderStatus());
     }
 
     @Test
-    void testUpdatePaymentStatus() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
-        Order updatedOrder = orderService.updatePaymentStatus(1L, OrderPaymentStatus.PAID);
-        assertThat(updatedOrder.getPaymentStatus()).isEqualTo(OrderPaymentStatus.PAID);
-        verify(orderRepository, times(1)).save(order);
+    public void testUpdatePaymentStatus() {
+        when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+        Order updatedOrder = orderService.updatePaymentStatus(order.getOrderID(), EOrderPaymentStatus.PAID);
+        assertNotNull(updatedOrder);
+        assertEquals(EOrderPaymentStatus.PAID, updatedOrder.getPaymentStatus());
     }
 
     @Test
-    void testCompleteOrder() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-
-        Order completedOrder = orderService.completeOrder(1L);
-        assertThat(completedOrder.getOrderStatus()).isEqualTo(Order.OrderStatus.CONFIRMED);
-        verify(orderRepository, times(1)).save(order);
+    public void testCompleteOrder() {
+        when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+        Order completedOrder = orderService.completeOrder(order.getOrderID());
+        assertNotNull(completedOrder);
+        assertEquals(EOrderStatus.CONFIRMED, completedOrder.getOrderStatus());
     }
 }

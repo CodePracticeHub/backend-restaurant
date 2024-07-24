@@ -22,13 +22,29 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public List<Order> getAllOrders() {
 		logger.info("Inside getOrders Service ...");
-		List<Order> list = repo.findAll();
-		return list;
+		return repo.findAll();
 	}
 
 	@Override
+	@Transactional
 	public Order placeOrder(Order order) {
 		logger.info("Inside placeOrder Service ...");
+
+		// Ensure the status is set to PENDING if not already set
+		if (order.getStatus() == null) {
+			order.setStatus(EOrderStatus.PENDING);
+		}
+
+		// Validate the order items
+		if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
+			throw new IllegalArgumentException("Order must have at least one item.");
+		}
+
+		// Ensure each order item references this order
+		for (OrderItem item : order.getOrderItems()) {
+			item.setOrder(order);
+		}
+
 		return repo.save(order);
 	}
 
@@ -54,18 +70,21 @@ public class OrderServiceImpl implements IOrderService {
 		Order existingOrder = repo.findById(orderId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order with ID " + orderId + " not found."));
 
-		existingOrder.setCreatedAt(order.getCreatedAt());
 		existingOrder.setOrderDateTime(order.getOrderDateTime());
-		existingOrder.setStatus(order.getStatus());
 		existingOrder.setTotalAmount(order.getTotalAmount());
-		existingOrder.setUpdatedAt(order.getUpdatedAt());
+		existingOrder.setStatus(order.getStatus());
+		existingOrder.setPaymentStatus(order.getPaymentStatus());
+		existingOrder.setDeliveryAddress(order.getDeliveryAddress());
+		existingOrder.setOrderStatus(order.getOrderStatus());
+		existingOrder.setConfirmedAt(order.getConfirmedAt());
+		existingOrder.setCanceledAt(order.getCanceledAt());
 
 		return repo.save(existingOrder);
 	}
 
 	@Override
 	@Transactional
-	public Order updatePaymentStatus(Long orderId, OrderPaymentStatus paymentStatus) {
+	public Order updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus) {
 		logger.info("Inside updatePaymentStatus Service for order ID: {}", orderId);
 		Order order = repo.findById(orderId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order with ID " + orderId + " not found."));
@@ -81,7 +100,7 @@ public class OrderServiceImpl implements IOrderService {
 		Order order = repo.findById(orderId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order with ID " + orderId + " not found."));
 
-		order.setOrderStatus(Order.OrderStatus.CONFIRMED);
+		order.setOrderStatus(EOrderStatus.CONFIRMED);
 		return repo.save(order);
 	}
 }

@@ -1,12 +1,6 @@
 package com.restaurantmanagement.entity.user;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import com.restaurantmanagement.entity.user.IUser;
-import jakarta.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import com.restaurantmanagement.security.model.User;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -52,7 +46,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_EMPLOYEE') and !#updatedUser.roles.contains('ROLE_ADMIN'))")
-    public ResponseEntity<?> updateUser(@PathVariable long userId, @Valid @RequestBody User updatedUser) {
+    public ResponseEntity<?> updateUser(@PathVariable long userId, @Valid @RequestBody UserUpdateDTO updatedUser) {
         User user = userService.updateUser(userId, updatedUser);
         return ResponseEntity.ok(user);
     }
@@ -64,19 +58,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    // Endpoint for placing orders
-//    @PostMapping("/orders")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    public ResponseEntity<?> placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
-//        // Logic to place order
-//        return ResponseEntity.ok("Order placed successfully");
-//    }
-//
-//    // Endpoint for making payments
-//    @PostMapping("/payments")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    public ResponseEntity<?> makePayment(@Valid @RequestBody PaymentRequest paymentRequest) {
-//        // Logic to make payment
-//        return ResponseEntity.ok("Payment made successfully");
-//    }
+    // Uncomment and implement these endpoints as necessary
+    // Endpoint for placing orders
+    // @PostMapping("/orders")
+    // @PreAuthorize("hasRole('ROLE_USER')")
+    // public ResponseEntity<?> placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
+    //     // Logic to place order
+    //     return ResponseEntity.ok("Order placed successfully");
+    // }
+
+    // Endpoint for making payments
+    // @PostMapping("/payments")
+    // @PreAuthorize("hasRole('ROLE_USER')")
+    // public ResponseEntity<?> makePayment(@Valid @RequestBody PaymentRequest paymentRequest) {
+    //     // Logic to make payment
+    //     return ResponseEntity.ok("Payment made successfully");
+    // }
 }

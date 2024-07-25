@@ -9,7 +9,9 @@ import com.restaurantmanagement.entity.order.IOrderService;
 import com.restaurantmanagement.entity.order.Order;
 import com.restaurantmanagement.entity.order.OrderController;
 import com.restaurantmanagement.entity.order.EOrderStatus;
+import com.restaurantmanagement.entity.order.EOrderPaymentStatus;
 import com.restaurantmanagement.entity.order.dto.OrderDTO;
+import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebMvcTest(OrderController.class)
 public class OrderControllerTest {
@@ -33,6 +36,7 @@ public class OrderControllerTest {
 
     private Order order;
     private OrderDTO orderDTO;
+    private Map<String, Object> partialOrderUpdate;
 
     @BeforeEach
     void setUp() {
@@ -43,6 +47,11 @@ public class OrderControllerTest {
         order.setStatus(EOrderStatus.PENDING);
 
         orderDTO = new OrderDTO(order);
+
+        partialOrderUpdate = new HashMap<>();
+        partialOrderUpdate.put("confirmedAt", "2024-07-25 22:03:08");
+        partialOrderUpdate.put("status", "CONFIRMED");
+        partialOrderUpdate.put("paymentStatus", "REFUNDED");
     }
 
     @Test
@@ -82,10 +91,10 @@ public class OrderControllerTest {
 
     @Test
     void testDeleteOrderById() throws Exception {
-        doNothing().when(orderService).deleteOrderById(1L);
+        doThrow(new ResourceNotFoundException("Order Not Found with ID: " + 1L)).when(orderService).deleteOrderById(1L);
 
         mockMvc.perform(delete("/api/v1/orders/{id}", 1L))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
 
         verify(orderService, times(1)).deleteOrderById(1L);
     }
@@ -101,5 +110,18 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderID").value(orderDTO.getOrderID()));
 
         verify(orderService, times(1)).updateOrder(any(Order.class));
+    }
+
+    @Test
+    void testPartialUpdateOrder() throws Exception {
+        when(orderService.partialUpdateOrder(eq(1L), any(Map.class))).thenReturn(orderDTO);
+
+        mockMvc.perform(patch("/api/v1/orders/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(partialOrderUpdate)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderID").value(orderDTO.getOrderID()));
+
+        verify(orderService, times(1)).partialUpdateOrder(eq(1L), any(Map.class));
     }
 }

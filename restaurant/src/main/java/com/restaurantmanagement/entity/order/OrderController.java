@@ -1,13 +1,14 @@
 package com.restaurantmanagement.entity.order;
 
-import java.util.List;
-
 import com.restaurantmanagement.entity.order.dto.OrderDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -51,5 +52,11 @@ public class OrderController {
 			throw new IllegalArgumentException("Path variable ID and request body ID do not match");
 		}
 		return orderService.updateOrder(updatedOrder);
+	}
+
+	@PatchMapping("/{id}")
+	public OrderDTO partiallyUpdateOrder(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+		logger.info("Request for partial order update");
+		return orderService.partialUpdateOrder(id, updates);
 	}
 }

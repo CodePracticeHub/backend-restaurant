@@ -3,6 +3,7 @@ package com.restaurantmanagement.entity.order;
 import com.restaurantmanagement.entity.order.dto.OrderDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IOrderService {
 	List<OrderDTO> getAllOrders();
@@ -12,4 +13,5 @@ public interface IOrderService {
 	OrderDTO updateOrder(Order order);
 	OrderDTO updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus);
 	OrderDTO completeOrder(Long orderId);
+	OrderDTO partialUpdateOrder(Long id, Map<String, Object> updates);
 }

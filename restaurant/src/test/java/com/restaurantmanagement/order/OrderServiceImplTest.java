@@ -1,5 +1,7 @@
-package com.restaurantmanagement.entity.order;
+package com.restaurantmanagement.order;
 
+import com.restaurantmanagement.entity.order.*;
+import com.restaurantmanagement.entity.order.dto.OrderDTO;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.security.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +65,7 @@ public class OrderServiceImplTest {
     @Test
     public void testGetAllOrders() {
         when(orderRepository.findAll()).thenReturn(Arrays.asList(order));
-        List<Order> orders = orderService.getAllOrders();
+        List<OrderDTO> orders = orderService.getAllOrders();
         assertNotNull(orders);
         assertEquals(1, orders.size());
     }
@@ -71,7 +73,7 @@ public class OrderServiceImplTest {
     @Test
     public void testPlaceOrder() {
         when(orderRepository.save(order)).thenReturn(order);
-        Order placedOrder = orderService.placeOrder(order);
+        OrderDTO placedOrder = orderService.placeOrder(order);
         assertNotNull(placedOrder);
         assertEquals(order.getOrderID(), placedOrder.getOrderID());
     }
@@ -79,7 +81,7 @@ public class OrderServiceImplTest {
     @Test
     public void testGetOrderById() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        Order foundOrder = orderService.getOrderById(1L);
+        OrderDTO foundOrder = orderService.getOrderById(1L);
         assertNotNull(foundOrder);
         assertEquals(order.getOrderID(), foundOrder.getOrderID());
     }
@@ -102,7 +104,7 @@ public class OrderServiceImplTest {
         when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
         when(orderRepository.save(order)).thenReturn(order);
         order.setOrderStatus(EOrderStatus.CONFIRMED);
-        Order updatedOrder = orderService.updateOrder(order);
+        OrderDTO updatedOrder = orderService.updateOrder(order);
         assertNotNull(updatedOrder);
         assertEquals(EOrderStatus.CONFIRMED, updatedOrder.getOrderStatus());
     }
@@ -111,7 +113,7 @@ public class OrderServiceImplTest {
     public void testUpdatePaymentStatus() {
         when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
         when(orderRepository.save(order)).thenReturn(order);
-        Order updatedOrder = orderService.updatePaymentStatus(order.getOrderID(), EOrderPaymentStatus.PAID);
+        OrderDTO updatedOrder = orderService.updatePaymentStatus(order.getOrderID(), EOrderPaymentStatus.PAID);
         assertNotNull(updatedOrder);
         assertEquals(EOrderPaymentStatus.PAID, updatedOrder.getPaymentStatus());
     }
@@ -120,7 +122,7 @@ public class OrderServiceImplTest {
     public void testCompleteOrder() {
         when(orderRepository.findById(order.getOrderID())).thenReturn(Optional.of(order));
         when(orderRepository.save(order)).thenReturn(order);
-        Order completedOrder = orderService.completeOrder(order.getOrderID());
+        OrderDTO completedOrder = orderService.completeOrder(order.getOrderID());
         assertNotNull(completedOrder);
         assertEquals(EOrderStatus.CONFIRMED, completedOrder.getOrderStatus());
     }

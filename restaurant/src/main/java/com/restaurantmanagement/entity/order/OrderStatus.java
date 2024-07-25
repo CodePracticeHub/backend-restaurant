@@ -1,39 +1,29 @@
 package com.restaurantmanagement.entity.order;
 
-import jakarta.persistence.*;
+import com.restaurantmanagement.entity.order.EOrderStatus;
+import lombok.Data;
 
+import jakarta.persistence.*;
+import java.sql.Timestamp;
+
+@Data
 @Entity
-@Table(name = "order_statuses")
+@Table(name = "order_status")
 public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private EOrderStatus name;
+    private EOrderStatus status;
 
-    public OrderStatus() {
+    private Timestamp timestamp;
 
+    public EOrderStatus getStatus() {
+        return status;
     }
 
-    public OrderStatus(EOrderStatus name) {
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public EOrderStatus getName() {
-        return name;
-    }
-
-    public void setName(EOrderStatus name) {
-        this.name = name;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 }

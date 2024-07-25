@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +19,7 @@ import com.restaurantmanagement.security.model.User;
 
 @Entity
 @Data
+@ToString(exclude = {"orderItems", "user"})
 @Table(name="customerorder")
 public class Order implements Serializable {
 
@@ -33,7 +35,7 @@ public class Order implements Serializable {
     private Date orderDateTime;
 
     @Column(name = "total_amount")
-    private double totalAmount;
+    private Double totalAmount;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -51,7 +53,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<OrderItem> orderItems;
 
@@ -77,4 +79,17 @@ public class Order implements Serializable {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "status_id"))
     private Set<OrderStatus> orderStatuses = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID=" + orderID +
+                ", orderDateTime=" + orderDateTime +
+                ", totalAmount=" + totalAmount +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", status='" + status + '\'' +
+                ", user=" + (user != null ? user.getId() : null) +
+                '}';
+    }
 }

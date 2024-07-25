@@ -50,6 +50,7 @@ public class Menu implements Serializable {
     @Column(name = "image_url")
     private String imageURL;
 
+    @Column(name = "date", nullable = false)
     @Future(message = "Date must be in the future")
     @NotNull(message = "Date cannot be null")
     private Date date;

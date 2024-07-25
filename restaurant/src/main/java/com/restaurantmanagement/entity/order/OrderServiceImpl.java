@@ -1,15 +1,6 @@
 package com.restaurantmanagement.entity.order;
 
 import com.restaurantmanagement.entity.order.dto.OrderDTO;
-
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.restaurantmanagement.entity.menu.Menu;
 import com.restaurantmanagement.entity.menu.MenuRepository;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
@@ -20,6 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements IOrderService {
@@ -163,13 +162,12 @@ public class OrderServiceImpl implements IOrderService {
 					existingOrder.setDeliveryAddress((String) value);
 					break;
 				case "orderStatus":
-					existingOrder.setOrderStatus(EOrderStatus.valueOf((String) value));
-					break;
-				case "confirmedAt":
-					existingOrder.setConfirmedAt(Timestamp.valueOf((String) value + " 00:00:00"));
-					break;
-				case "canceledAt":
-					existingOrder.setCanceledAt(Timestamp.valueOf((String) value + " 00:00:00"));
+					EOrderStatus newStatus = EOrderStatus.valueOf((String) value);
+					existingOrder.setOrderStatus(newStatus);
+					if (newStatus == EOrderStatus.CONFIRMED) {
+						logger.info("Setting confirmedAt for order ID: {}", id);
+						existingOrder.setConfirmedAt(new Timestamp(System.currentTimeMillis()));
+					}
 					break;
 				case "newOrderItem":
 					Map<String, Object> orderItemMap = (Map<String, Object>) value;
@@ -184,21 +182,36 @@ public class OrderServiceImpl implements IOrderService {
 					newOrderItem.setOrder(existingOrder);
 					existingOrder.getOrderItems().add(newOrderItem);
 					break;
-				// Add more fields as necessary
+				case "removeOrderItem":
+					Long orderItemId = Long.valueOf(value.toString());
+					Optional<OrderItem> orderItemOptional = existingOrder.getOrderItems().stream()
+							.filter(item -> item.getId().equals(orderItemId))
+							.findFirst();
+					if (orderItemOptional.isPresent()) {
+						OrderItem orderItemToRemove = orderItemOptional.get();
+						orderItemToRemove.setOrder(null); // Break the association
+						existingOrder.getOrderItems().remove(orderItemToRemove);
+					} else {
+						logger.warn("Order item with ID {} not found in order ID {}", orderItemId, id);
+						throw new ResourceNotFoundException("Order item with ID " + orderItemId + " not found in the order.");
+					}
+					break;
 				default:
 					throw new IllegalArgumentException("Invalid field: " + key);
 			}
 		});
 
 		// Recalculate total amount
-		existingOrder.setTotalAmount(existingOrder.getOrderItems().stream()
+		BigDecimal totalAmount = existingOrder.getOrderItems().stream()
 				.map(OrderItem::getPrice)
-				.reduce(BigDecimal.ZERO, BigDecimal::add)
-				.doubleValue());
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		existingOrder.setTotalAmount(totalAmount.doubleValue());
 
 		existingOrder.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Update timestamp
 
 		Order updatedOrder = orderRepository.save(existingOrder);
+		logger.info("Updated order: {}", updatedOrder);
 		return new OrderDTO(updatedOrder);
 	}
+
 }

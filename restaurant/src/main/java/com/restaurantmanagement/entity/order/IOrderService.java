@@ -1,20 +1,15 @@
 package com.restaurantmanagement.entity.order;
 
+import com.restaurantmanagement.entity.order.dto.OrderDTO;
+
 import java.util.List;
 
 public interface IOrderService {
-
-	List<Order> getAllOrders();
-
-	Order placeOrder(Order order);
-
-	Order getOrderById(Long id);
-
+	List<OrderDTO> getAllOrders();
+	OrderDTO placeOrder(Order order);
+	OrderDTO getOrderById(Long id);
 	void deleteOrderById(Long id);
-
-	Order updateOrder(Order order);
-
-	Order updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus);
-
-	Order completeOrder(Long orderId);
+	OrderDTO updateOrder(Order order);
+	OrderDTO updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus);
+	OrderDTO completeOrder(Long orderId);
 }

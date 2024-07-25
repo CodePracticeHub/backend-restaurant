@@ -1,7 +1,9 @@
 package com.restaurantmanagement.entity.order;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.restaurantmanagement.security.repository.UserRepository;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import com.restaurantmanagement.entity.menu.Menu;
 import com.restaurantmanagement.entity.menu.MenuRepository;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.security.model.User;
+import com.restaurantmanagement.entity.order.dto.OrderDTO;
 
 @Service
 public class OrderServiceImpl implements IOrderService {
@@ -30,14 +33,14 @@ public class OrderServiceImpl implements IOrderService {
 	private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
 	@Override
-	public List<Order> getAllOrders() {
+	public List<OrderDTO> getAllOrders() {
 		logger.info("Inside getOrders Service ...");
-		return orderRepository.findAll();
+		return orderRepository.findAll().stream().map(OrderDTO::new).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional
-	public Order placeOrder(Order order) {
+	public OrderDTO placeOrder(Order order) {
 		logger.info("Inside placeOrder Service ...");
 
 		// Fetch user details
@@ -53,25 +56,33 @@ public class OrderServiceImpl implements IOrderService {
 			orderItem.setOrder(order);
 		}
 
-		return orderRepository.save(order);
+		// Set timestamps
+		order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		order.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+		Order savedOrder = orderRepository.save(order);
+		return new OrderDTO(savedOrder);
 	}
 
 	@Override
-	public Order getOrderById(Long id) {
+	public OrderDTO getOrderById(Long id) {
 		logger.info("Inside getOrderById Service ...");
 		Optional<Order> optional = orderRepository.findById(id);
-		return optional.orElseThrow(() -> new ResourceNotFoundException("Order Not Found with ID: " + id));
+		Order order = optional.orElseThrow(() -> new ResourceNotFoundException("Order Not Found with ID: " + id));
+		return new OrderDTO(order);
 	}
 
 	@Override
 	public void deleteOrderById(Long id) {
 		logger.info("Inside deleteOrderById Service ...");
-		orderRepository.deleteById(id);
+		Order order = orderRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Order Not Found with ID: " + id));
+		orderRepository.delete(order);
 	}
 
 	@Override
 	@Transactional
-	public Order updateOrder(Order order) {
+	public OrderDTO updateOrder(Order order) {
 		logger.info("Inside updateOrder Service ...");
 		Long orderId = order.getOrderID();
 
@@ -86,29 +97,37 @@ public class OrderServiceImpl implements IOrderService {
 		existingOrder.setOrderStatus(order.getOrderStatus());
 		existingOrder.setConfirmedAt(order.getConfirmedAt());
 		existingOrder.setCanceledAt(order.getCanceledAt());
+		existingOrder.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Update timestamp
 
-		return orderRepository.save(existingOrder);
+		Order updatedOrder = orderRepository.save(existingOrder);
+		return new OrderDTO(updatedOrder);
 	}
 
 	@Override
 	@Transactional
-	public Order updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus) {
+	public OrderDTO updatePaymentStatus(Long orderId, EOrderPaymentStatus paymentStatus) {
 		logger.info("Inside updatePaymentStatus Service for order ID: {}", orderId);
 		Order order = orderRepository.findById(orderId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order with ID " + orderId + " not found."));
 
 		order.setPaymentStatus(paymentStatus);
-		return orderRepository.save(order);
+		order.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Update timestamp
+
+		Order updatedOrder = orderRepository.save(order);
+		return new OrderDTO(updatedOrder);
 	}
 
 	@Override
 	@Transactional
-	public Order completeOrder(Long orderId) {
+	public OrderDTO completeOrder(Long orderId) {
 		logger.info("Inside completeOrder Service for order ID: {}", orderId);
 		Order order = orderRepository.findById(orderId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order with ID " + orderId + " not found."));
 
 		order.setOrderStatus(EOrderStatus.CONFIRMED);
-		return orderRepository.save(order);
+		order.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Update timestamp
+
+		Order completedOrder = orderRepository.save(order);
+		return new OrderDTO(completedOrder);
 	}
 }

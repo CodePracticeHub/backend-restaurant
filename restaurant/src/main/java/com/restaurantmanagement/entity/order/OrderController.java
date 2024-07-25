@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,10 +37,10 @@ public class OrderController {
 		return orderService.getOrderById(id);
 	}
 
-	@DeleteMapping("/{id}")
-	public void deleteOrderById(@PathVariable Long id) {
-		logger.info("Request for delete order with id: {}", id);
-		orderService.deleteOrderById(id);
+	@DeleteMapping("/{orderId}")
+	public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
+		orderService.deleteOrderById(orderId);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("/{id}")
@@ -50,4 +51,5 @@ public class OrderController {
 		}
 		return orderService.updateOrder(updatedOrder);
 	}
+
 }

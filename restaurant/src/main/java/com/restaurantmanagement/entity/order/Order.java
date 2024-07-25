@@ -33,7 +33,7 @@ public class Order implements Serializable {
     private Date orderDateTime;
 
     @Column(name = "total_amount")
-    private double totalAmount;
+    private Double totalAmount;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

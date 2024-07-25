@@ -1,5 +1,6 @@
 package com.restaurantmanagement.entity.order;
 
+import com.restaurantmanagement.entity.order.dto.OrderDTO;
 import com.restaurantmanagement.exceptions.ResourceNotFoundException;
 import com.restaurantmanagement.security.model.User;
 import org.junit.jupiter.api.BeforeEach;

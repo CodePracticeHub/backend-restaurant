@@ -168,19 +168,28 @@ public class OrderServiceImpl implements IOrderService {
 						logger.info("Setting confirmedAt for order ID: {}", id);
 						existingOrder.setConfirmedAt(new Timestamp(System.currentTimeMillis()));
 					}
+					else if (newStatus == EOrderStatus.CANCELED) {
+						logger.info("Setting canceledAt for order ID: {}", id);
+						existingOrder.setCanceledAt(new Timestamp(System.currentTimeMillis()));
+					}
 					break;
 				case "newOrderItem":
-					Map<String, Object> orderItemMap = (Map<String, Object>) value;
-					Long menuId = Long.valueOf(orderItemMap.get("menuId").toString());
-					int quantity = Integer.parseInt(orderItemMap.get("quantity").toString());
-					Menu menuItem = menuRepository.findById(menuId)
-							.orElseThrow(() -> new ResourceNotFoundException("Menu Item Not Found with ID: " + menuId));
-					OrderItem newOrderItem = new OrderItem();
-					newOrderItem.setMenuItem(menuItem);
-					newOrderItem.setQuantity(quantity);
-					newOrderItem.setPrice(menuItem.getPrice().multiply(new BigDecimal(quantity)));
-					newOrderItem.setOrder(existingOrder);
-					existingOrder.getOrderItems().add(newOrderItem);
+					if (value instanceof Map) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> orderItemMap = (Map<String, Object>) value;
+						Long menuId = Long.valueOf(orderItemMap.get("menuId").toString());
+						int quantity = Integer.parseInt(orderItemMap.get("quantity").toString());
+						Menu menuItem = menuRepository.findById(menuId)
+								.orElseThrow(() -> new ResourceNotFoundException("Menu Item Not Found with ID: " + menuId));
+						OrderItem newOrderItem = new OrderItem();
+						newOrderItem.setMenuItem(menuItem);
+						newOrderItem.setQuantity(quantity);
+						newOrderItem.setPrice(menuItem.getPrice().multiply(new BigDecimal(quantity)));
+						newOrderItem.setOrder(existingOrder);
+						existingOrder.getOrderItems().add(newOrderItem);
+					} else {
+						throw new IllegalArgumentException("Invalid type for newOrderItem");
+					}
 					break;
 				case "removeOrderItem":
 					Long orderItemId = Long.valueOf(value.toString());

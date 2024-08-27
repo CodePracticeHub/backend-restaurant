@@ -29,3 +29,5 @@ replay_pid*
 # IntelliJ Related
 .idea/
 
+# Enviroment variables
+.evn

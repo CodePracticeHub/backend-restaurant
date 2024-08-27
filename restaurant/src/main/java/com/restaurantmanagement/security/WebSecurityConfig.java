@@ -21,6 +21,7 @@ import com.restaurantmanagement.security.service.UserDetailsServiceImpl;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
+
   private final UserDetailsServiceImpl userDetailsService;
 
   @Autowired
@@ -39,10 +40,8 @@ public class WebSecurityConfig {
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
     authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
-
     return authProvider;
   }
 
@@ -61,15 +60,18 @@ public class WebSecurityConfig {
     http.csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("/api/auth/**").permitAll()
-                            .requestMatchers("/api/test/**").permitAll()
-                            .requestMatchers("/api/reservation-guests").permitAll()
-                            .anyRequest().authenticated()
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/api/auth/**").permitAll()  // Public access for authentication endpoints
+                    .requestMatchers("/api/test/**").permitAll()  // Public access for test endpoints
+                    .requestMatchers("/api/reservation-guests").permitAll()  // Public access for guest reservations
+                    .requestMatchers("/api/v1/user/current").authenticated()  // Require authentication for user info
+                    .anyRequest().authenticated()  // All other endpoints require authentication
             );
 
+    // Set the authentication provider
     http.authenticationProvider(authenticationProvider());
 
+    // Add the JWT authentication filter
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

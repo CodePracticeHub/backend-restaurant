@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: ./restaurant
+      dockerfile: ../app/Dockerfile
+    ports:
+      - "8091:8090"
+    networks:
+      - back-tier
+    depends_on:
+      - db
+    environment:
+      MYSQL_DATABASE: restaurant-management
+      MYSQL_ROOT_PASSWORD: MyPassword123!
+#    configs:
+#      - httpd-config
+#    secrets:
+#      - server-certificate
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: MyPassword123!
+      MYSQL_DATABASE: restaurant-management
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - back-tier
+    expose:
+      - "3306"
+
+volumes:
+  db-data:
+
+configs:
+  httpd-config:
+    external: true
+
+secrets:
+  server-certificate:
+    external: true
+
+networks:
+  back-tier: {}

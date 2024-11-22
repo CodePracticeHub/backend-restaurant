@@ -62,4 +62,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     return null;
   }
+
+  public void setJwtUtils(JwtUtils jwtUtils) {
+    this.jwtUtils = jwtUtils;
+  }
+
+  public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
+
 }
